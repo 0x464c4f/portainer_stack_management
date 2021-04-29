@@ -1,0 +1,35 @@
+stages:
+    - deploy
+    - build
+
+.build_docker_image:
+    tags:
+        - docker
+    services:
+        - name: docker:dind
+          entrypoint: ["env", "-u", "DOCKER_HOST"]
+          command: ["dockerd-entrypoint.sh"]
+    variables:
+        DOCKER_HOST: tcp://docker:2375/
+        DOCKER_TLS_CERTDIR: ""
+        GIT_STRATEGY: clone
+        GIT_SUBMODULE_STRATEGY: recursive
+    before_script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
+deploy:    
+    stage: deploy
+    tags: 
+        - docker
+    script:
+        - pip install twine
+        - python3 setup.py sdist bdist_wheel 
+        - python3 -m twine upload -u ${TWINE_USERNAME} -p ${TWINE_PASSWORD} --repository-url https://repo-url.url dist/* 
+
+build:    
+    extends: .build_docker_image
+    stage: build
+    script:
+        - docker pull "$CI_REGISTRY_IMAGE/deploy_runner" || true
+        - docker build --cache-from "$CI_REGISTRY_IMAGE/deploy_runner" --tag "$CI_REGISTRY_IMAGE/deploy_runner" ./ --build-arg PIP_TOKEN_PORTAINER="$PIP_TOKEN_PORTAINER"
+        - docker push "$CI_REGISTRY_IMAGE/deploy_runner"
