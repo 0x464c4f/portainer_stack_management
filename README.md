@@ -1,7 +1,7 @@
 # Portainer Stack and Secret Management for Docker Swarm
 
 ## Description
-This project is a collection of scripts that help to deploy/update a Docker Swarm stacks through Portainer API's. 
+This project is a collection of scripts that help to deploy/update Docker Swarm stacks through Portainer API's. 
 It allows to: 
 1. Create and update a Docker stack from a compose file as input 
 2. Create or update Docker secrets to enable secret rotation
