@@ -7,10 +7,10 @@ It allows to:
 2. Create or update Docker secrets to enable secret rotation
 ## Installation
 1. The portainer username and password environment variables need to be defined first
-    - "PORTAINER_URL"
-    - "SWARM_ID"
-    - "PORTAINER_USER"
-    - "PORTAINER_PW"
+    - *"PORTAINER_URL"*
+    - *"SWARM_ID"*
+    - *"PORTAINER_USER"*
+    - *"PORTAINER_PW"*
 
 2. Install package like this:
 
